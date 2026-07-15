@@ -59,7 +59,7 @@ int main() {
         // Send history directly without custom headers to stay under 2.0x overhead
         sendto(sock_out, history, history_count * FRAME_SIZE, 0,
                (struct sockaddr *)&addr_out, sizeof(addr_out));
-    }
+        }
 
     close(sock_in);
     close(sock_out);
