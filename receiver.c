@@ -58,9 +58,9 @@ void *playout_thread(void *arg) {
             if (buf_seq == next_seq) {
                 sendto(sock_out, &playout_buffer[idx], FRAME_SIZE, 0,
                        (struct sockaddr *)&addr_out, sizeof(addr_out));
-    }
-}
-pthread_mutex_unlock(&buf_mutex);
+            }
+        }
+        pthread_mutex_unlock(&buf_mutex);
 
         next_seq++;
     }
