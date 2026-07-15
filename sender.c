@@ -56,10 +56,20 @@ int main() {
             history_count++;
         }
 
-        // Send history directly without custom headers to stay under 2.0x overhead
-        sendto(sock_out, history, history_count * FRAME_SIZE, 0,
-               (struct sockaddr *)&addr_out, sizeof(addr_out));
+        // Parse sequence number to decide if we should send history
+        uint32_t seq = ntohl(current.seq);
+
+        if (seq % 2 != 0 && history_count > 1) {
+            // Send 2 frames (current + 1 history frame)
+            sendto(sock_out, history, 2 * FRAME_SIZE, 0,
+                   (struct sockaddr *)&addr_out, sizeof(addr_out));
+        } else {
+            // Send only the current frame to keep overhead low
+            sendto(sock_out, &current, FRAME_SIZE, 0,
+                   (struct sockaddr *)&addr_out, sizeof(addr_out));
         }
+
+    }
 
     close(sock_in);
     close(sock_out);
